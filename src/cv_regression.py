@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from catboost import CatBoostRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import GroupKFold, TimeSeriesSplit
 from xgboost import XGBRegressor
 
 from config import (
@@ -116,6 +116,74 @@ def run_group_cv(df):
         
     return df_out, fold_df
 
+def run_timeseries_cv(df):
+    features = [
+        "dayofweek", "quarter", "month", "year",
+        "dayofyear", "dayofmonth", "weekofyear",
+        "lag1", "lag2", "lag3"
+    ]
+    target = "Median_PM25"
+    
+    print("\n=== Secondary Protocol: Per-City TimeSeriesSplit (5 Splits, test_size=150, gap=24) ===")
+    
+    cb_city_rmses = []
+    xgb_city_rmses = []
+    results = []
+    
+    for city, grp in df.groupby("City"):
+        grp = grp.sort_values("Date").reset_index(drop=True)
+        tscv = TimeSeriesSplit(n_splits=5, test_size=150, gap=24)
+        
+        city_cb_rmses = []
+        city_xgb_rmses = []
+        
+        for tr_idx, te_idx in tscv.split(grp):
+            X_tr, y_tr = grp.iloc[tr_idx][features], grp.iloc[tr_idx][target]
+            X_te, y_te = grp.iloc[te_idx][features], grp.iloc[te_idx][target]
+            
+            cb = CatBoostRegressor(**CATBOOST_PARAMS)
+            cb.fit(X_tr, y_tr, eval_set=(X_te, y_te), early_stopping_rounds=100, verbose=False)
+            preds_cb = cb.predict(X_te)
+            city_cb_rmses.append(np.sqrt(mean_squared_error(y_te, preds_cb)))
+            
+            xgb = XGBRegressor(**XGBOOST_PARAMS)
+            xgb.fit(X_tr, y_tr, eval_set=[(X_te, y_te)], verbose=False)
+            preds_xgb = xgb.predict(X_te)
+            city_xgb_rmses.append(np.sqrt(mean_squared_error(y_te, preds_xgb)))
+            
+        m_cb = float(np.mean(city_cb_rmses))
+        m_xgb = float(np.mean(city_xgb_rmses))
+        cb_city_rmses.append(m_cb)
+        xgb_city_rmses.append(m_xgb)
+        
+        results.append({
+            "City": city,
+            "CatBoost RMSE": f"{m_cb:.3f}",
+            "XGBoost RMSE": f"{m_xgb:.3f}"
+        })
+        print(f"  {city:15s} | CatBoost RMSE: {m_cb:.3f} | XGBoost RMSE: {m_xgb:.3f}")
+        
+    ts_df = pd.DataFrame(results)
+    mean_row = {
+        "City": "Average",
+        "CatBoost RMSE": f"{float(np.mean(cb_city_rmses)):.3f}",
+        "XGBoost RMSE": f"{float(np.mean(xgb_city_rmses)):.3f}"
+    }
+    ts_df = pd.concat([ts_df, pd.DataFrame([mean_row])], ignore_index=True)
+    
+    print("\n--- TimeSeriesSplit Summary ---")
+    print(f"Average CatBoost RMSE: {mean_row['CatBoost RMSE']}")
+    print(f"Average XGBoost RMSE:  {mean_row['XGBoost RMSE']}")
+    
+    ts_df.to_csv(TABLES_DIR / "timeseries_cv_rmse.csv", index=False)
+    
+    # Export LaTeX table with compact headers
+    tex_ts = ts_df.copy()
+    tex_ts.columns = ["City", "CB RMSE", "XGB RMSE"]
+    save_latex_tabular(tex_ts, TABLES_DIR / "timeseries_cv_rmse.tex")
+        
+    return ts_df
+
 def run_all_cv():
     df = build_features()
     df_oof, fold_df = run_group_cv(df)
@@ -124,7 +192,9 @@ def run_all_cv():
     oof_path = PROCESSED_DATA_DIR / "pm25_oof_preds.csv"
     df_oof.to_csv(oof_path, index=False)
     print(f"\nSaved OOF predictions to {oof_path}")
-    return df_oof, fold_df
+    
+    ts_df = run_timeseries_cv(df)
+    return df_oof, fold_df, ts_df
 
 if __name__ == "__main__":
     run_all_cv()
