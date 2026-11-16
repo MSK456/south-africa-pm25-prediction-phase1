@@ -89,7 +89,8 @@ def run_aqi_classification():
     }
     
     metrics_list = []
-
+    demo_list = []
+    demo_input = pd.DataFrame([[125.55]], columns=["Median_PM25"])
     
     fig, axes = plt.subplots(1, 5, figsize=(18, 3.6))
     
@@ -103,7 +104,13 @@ def run_aqi_classification():
         mse = mean_squared_error(y_test, y_pred)
         rmse = np.sqrt(mse)
         
-
+        demo_pred = int(model.predict(demo_input)[0])
+        demo_list.append({
+            "Model": name,
+            "Input Median_PM25": 125.55,
+            "Predicted AQI Class": demo_pred,
+            "AQI Category": "Severe" if demo_pred == 2 else str(demo_pred)
+        })
         
         metrics_list.append({
             "Model": name,
@@ -119,7 +126,7 @@ def run_aqi_classification():
         print(f"\nModel: {name}")
         print(f"  Accuracy: {acc:.3f}%, Sensitivity: {sens:.4f}, Specificity: {spec:.4f}")
         print(f"  MAE: {mae:.6f}, MSE: {mse:.6f}, RMSE: {rmse:.6f}")
-
+        print(f"  Demo prediction for 125.55: Class {demo_pred}")
         print("  Classification Report:")
         print(classification_report(y_test, y_pred, digits=4, zero_division=0))
         
@@ -144,7 +151,12 @@ def run_aqi_classification():
     tex_df = res_df[["Model", "Accuracy", "Sensitivity", "Specificity", "MAE", "MSE", "RMSE"]].copy()
     save_latex_tabular(tex_df, TABLES_DIR / "aqi_classifier_metrics.tex")
     
-    return res_df
+    # Save demo predictions table
+    demo_df = pd.DataFrame(demo_list)
+    demo_df.to_csv(TABLES_DIR / "aqi_demo_predictions.csv", index=False)
+    save_latex_tabular(demo_df, TABLES_DIR / "aqi_demo_predictions.tex")
+    
+    return res_df, demo_df
 
 if __name__ == "__main__":
     run_aqi_classification()
