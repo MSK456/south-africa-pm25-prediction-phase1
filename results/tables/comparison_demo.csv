@@ -1,0 +1,6 @@
+Model,Input PM2.5,Paper Output,Our Output,Match
+Random Forest,125.55,Class 2 (Severe),Class 2 (Severe),Yes (Exact)
+Logistic Regression,125.55,Class 2 (Severe),Class 2 (Severe),Yes (Exact)
+SVM,125.55,Class 2 (Severe),Class 2 (Severe),Yes (Exact)
+KNN,125.55,Class 2 (Severe),Class 2 (Severe),Yes (Exact)
+Decision Tree,125.55,Class 2 (Severe),Class 2 (Severe),Yes (Exact)

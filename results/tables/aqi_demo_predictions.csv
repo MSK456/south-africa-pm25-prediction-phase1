@@ -1,0 +1,6 @@
+Model,Input Median_PM25,Predicted AQI Class,AQI Category
+Random Forest,125.55,2,Severe
+Logistic Regression,125.55,2,Severe
+SVM,125.55,2,Severe
+KNN,125.55,2,Severe
+Decision Tree,125.55,2,Severe
