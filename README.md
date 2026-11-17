@@ -116,12 +116,34 @@ Running `run_all.py` twice with seed 42 will produce identical numerical results
 
 ---
 
-## 6. Global Seed and Determinism
+## 6. Execution Run Time
+
+Measured on an **Intel Core i5-8250U CPU @ 1.60GHz (4 cores, 8 threads), 16 GB RAM, Windows 11 Pro** running Python 3.11.9 within `.venv`:
+
+- **Total Pipeline Execution (`run_all.py`):** The full run takes about 3 to 7 minutes (measured 3:14 and 3:16 with `run_all.py`, and 6:35 in an earlier run under heavier load).
+
+### Per-Script Breakdown
+
+| Script | Stage Description | Runtime |
+| :--- | :--- | :---: |
+| `src/preprocess.py` | Raw data loading, edge date pruning, and mean imputation | 25.43 s |
+| `src/cv_regression.py` | 5-Fold GroupKFold and per-city TimeSeriesSplit cross-validation | 144.71 s |
+| `src/datesplit_eval.py` | Pre-2022 train and 2022 test temporal holdout evaluation | 3.90 s |
+| `src/no_station.py` | Leave-one-city-out CV and spatial predictions for unmonitored cities | 19.35 s |
+| `src/forecast.py` | Multi-step recursive daily forecast through 2023 with sanity check | 146.24 s |
+| `src/aqi_classifiers.py` | 5 AQI classification models, metrics evaluation, and demo test | 11.81 s |
+| `src/make_figures.py` | High-resolution figure generation and asset synchronization | 32.03 s |
+| `src/compare_with_paper.py` | Side-by-side comparison tables against published paper baselines | 0.16 s |
+| **Total** | **Full end-to-end execution (`python run_all.py`)** | **394.90 s** |
+
+---
+
+## 7. Global Seed and Determinism
 A global random seed of `42` is set in `src/config.py` for Python's `random`, `numpy`, scikit-learn estimators, CatBoost (`random_seed=42`), and XGBoost (`random_state=42`).
 
 ---
 
-## 7. How to Build the Report
+## 8. How to Build the Report
 The `report/` folder contains a single-column academic report formatted for Overleaf or local MiKTeX/pdfLaTeX:
 1. Zip the contents of the `report/` folder (or open it directly in a LaTeX editor).
 2. Upload to Overleaf or compile locally using `pdflatex` or `latexmk`:
@@ -136,7 +158,7 @@ The `report/` folder contains a single-column academic report formatted for Over
 
 ---
 
-## 8. Honest Note on Approximations and Paper Inconsistencies
+## 9. Honest Note on Approximations and Paper Inconsistencies
 Full details are recorded in `results/deviations.md`. The key points are:
 - **Unmonitored Cities**: The base paper mentioned Google Earth Engine and Sentinel-5P layers without providing code or band definitions. We approximated this using spatial coordinates and evaluated reliability via Leave-One-City-Out validation.
 - **Lag Features**: The paper showed 3 lag features in Figure 12 without defining their shift intervals. We used annual 52-week shifts (364, 728, 1092 days).
