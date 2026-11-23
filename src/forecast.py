@@ -150,26 +150,31 @@ def run_future_forecast():
     sanity_tex.to_csv(TABLES_DIR / "forecast_sanity_rmse.csv", index=False)
     save_latex_tabular(sanity_tex, TABLES_DIR / "forecast_sanity_rmse.tex")
     
-    # Plot 4x3 grid of future forecasts
+    # Plot future forecasts in a 2-column by 6-row layout
+    import matplotlib.dates as mdates
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
-    fig, axes = plt.subplots(4, 3, figsize=(15, 12), sharex=True)
+    fig, axes = plt.subplots(6, 2, figsize=(6.3, 8.0), sharex=True, dpi=300)
     axes = axes.flatten()
     
     for idx, city in enumerate(cities):
         ax = axes[idx]
         sub = full_forecast_df[full_forecast_df["City"] == city].copy()
         sub["Date"] = pd.to_datetime(sub["Date"])
-        ax.plot(sub["Date"], sub["Predicted_PM25"], color="#1f77b4", linewidth=1.2)
-        ax.set_title(f"{city} Future Predictions", fontsize=11, fontweight="bold")
-        ax.set_ylabel("PM2.5", fontsize=9)
+        ax.plot(sub["Date"], sub["Predicted_PM25"], color="#1f77b4", linewidth=1.0)
+        ax.set_title(city, fontsize=8.5, fontweight="bold")
+        ax.set_ylabel("AQI", fontsize=8)
+        ax.tick_params(axis="both", labelsize=8)
         ax.grid(True, linestyle="--", alpha=0.5)
-        ax.tick_params(axis="x", rotation=45)
+        if idx >= 10:
+            ax.xaxis.set_major_locator(mdates.MonthLocator(interval=3))
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+            ax.tick_params(axis="x", rotation=0, labelsize=8)
         
     plt.tight_layout()
     fig_path = FIGURES_DIR / "figure13_future_forecast_grid.png"
-    plt.savefig(fig_path, dpi=200)
+    plt.savefig(fig_path, dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"\nSaved 4x3 forecast grid to {fig_path}")
+    print(f"\nSaved 2x6 forecast grid to {fig_path}")
     
     return full_forecast_df, sanity_tex
 

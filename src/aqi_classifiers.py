@@ -92,7 +92,9 @@ def run_aqi_classification():
     demo_list = []
     demo_input = pd.DataFrame([[125.55]], columns=["Median_PM25"])
     
-    fig, axes = plt.subplots(1, 5, figsize=(18, 3.6))
+    # Two-column layout (3 rows, 2 columns) for high readability
+    fig, axes = plt.subplots(3, 2, figsize=(7.2, 9.6), dpi=300)
+    axes = axes.flatten()
     
     for idx, (name, model) in enumerate(models.items()):
         model.fit(X_train, y_train)
@@ -130,16 +132,43 @@ def run_aqi_classification():
         print("  Classification Report:")
         print(classification_report(y_test, y_pred, digits=4, zero_division=0))
         
-        # Plot confusion matrix
-        cm = confusion_matrix(y_test, y_pred)
-        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=axes[idx], cbar=False)
-        axes[idx].set_title(f"{name} Confusion Matrix", fontsize=11, fontweight="bold")
-        axes[idx].set_xlabel("Predicted Label")
-        axes[idx].set_ylabel("True Label")
+        # Plot confusion matrix with explicit 0-5 class labels and readable numbers
+        cm = confusion_matrix(y_test, y_pred, labels=list(range(6)))
+        sns.heatmap(
+            cm,
+            annot=True,
+            fmt="d",
+            cmap="Blues",
+            ax=axes[idx],
+            cbar=False,
+            annot_kws={"size": 8.0, "weight": "bold"},
+            xticklabels=[f"Class {i}" for i in range(6)],
+            yticklabels=[f"Class {i}" for i in range(6)],
+        )
+        axes[idx].set_title(f"{name} Confusion Matrix", fontsize=10, fontweight="bold")
+        axes[idx].set_xlabel("Predicted AQI Class (0 to 5)", fontsize=8.5)
+        axes[idx].set_ylabel("Actual AQI Class (0 to 5)", fontsize=8.5)
+        axes[idx].tick_params(axis="both", labelsize=7.5)
+
+    # Sixth subplot: Class guide legend
+    axes[5].axis("off")
+    axes[5].text(
+        0.15, 0.50,
+        "AQI Class Definitions:\n\n"
+        "• Class 0: Good (0 – 50)\n"
+        "• Class 1: Moderate (51 – 100)\n"
+        "• Class 2: Severe (101 – 150)\n"
+        "• Class 3: Unhealthy (151 – 200)\n"
+        "• Class 4: Very Unhealthy (201 – 300)\n"
+        "• Class 5: Hazardous (301+)",
+        fontsize=9,
+        va="center",
+        bbox=dict(boxstyle="round,pad=0.8", facecolor="#f8f9fa", edgecolor="#ced4da", linewidth=1.2)
+    )
         
     plt.tight_layout()
     cm_path = FIGURES_DIR / "figure14_classification_confusion_matrices.png"
-    plt.savefig(cm_path, dpi=200)
+    plt.savefig(cm_path, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"\nSaved confusion matrices to {cm_path}")
     
