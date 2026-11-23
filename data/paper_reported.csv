@@ -17,4 +17,18 @@ aqi_accuracy,SVM,Accuracy,98.881
 aqi_accuracy,KNN,Accuracy,99.986
 aqi_accuracy,Decision Tree,Accuracy,100.0
 demo,All Models,Predicted Class (125.55),2
-
+aqi_macro,Random Forest,Precision,1.00
+aqi_macro,Random Forest,Recall,1.00
+aqi_macro,Random Forest,F1,1.00
+aqi_macro,Decision Tree,Precision,1.00
+aqi_macro,Decision Tree,Recall,1.00
+aqi_macro,Decision Tree,F1,1.00
+aqi_macro,SVM,Precision,0.99
+aqi_macro,SVM,Recall,0.99
+aqi_macro,SVM,F1,0.99
+aqi_macro,KNN,Precision,0.82
+aqi_macro,KNN,Recall,0.83
+aqi_macro,KNN,F1,0.83
+aqi_macro,Logistic Regression,Precision,0.80
+aqi_macro,Logistic Regression,Recall,0.77
+aqi_macro,Logistic Regression,F1,0.78
