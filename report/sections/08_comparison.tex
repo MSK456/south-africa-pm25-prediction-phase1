@@ -1,0 +1,17 @@
+\section{Comparison with the Original Paper}
+Table \ref{tab:comparison_regression} compares the 5-fold cross-validation RMSE values reported in Figures 6 and 8 of Morapedi and Obagbuwa \cite{morapedi2023air} with our results.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{0.88}
+\caption{Side-by-Side Comparison of Regression Cross-Validation RMSE (Fold-by-fold comparison is indicative because fold city assignments differ; the primary comparison is the mean across folds)}
+\label{tab:comparison_regression}
+\input{tables/report_cv_comparison.tex}
+\end{table}
+
+For CatBoost, the base paper reported a mean fold RMSE of 25.719, while our run produced 28.863 (+3.144). For XGBoost, the base paper reported a mean fold RMSE of 27.639, while our run produced 28.576 (+0.937). In our reproduction, XGBoost achieved the slightly lower average fold error (28.576 vs 28.863), reversing the paper's reported ranking where CatBoost was superior. This indicates that neither algorithm holds a decisive advantage on this dataset, and the ranking may depend on fold assignment.
+
+In the AQI classification task, our accuracies are similar to published figures (Table \ref{tab:aqi_classification}): Decision Tree and Random Forest reached 99.960\% (paper: 100.000\%), KNN reached 99.940\% (paper: 99.986\%), Logistic Regression reached 99.900\% (paper: 98.957\%), and SVM reached 98.834\% (paper: 98.881\%). In the single-sample demo test with input 125.55, all five classifiers returned Class 2, matching the paper.
+
+We categorize our reproduction under three labels. \textbf{Reproduced}: AQI classification setup and the 125.55 demo (accuracies are similar, and near 100 percent is explained by label leakage). \textbf{Approximately reproduced}: spatial cross-validation (XGBoost mean within 0.94 of the paper, CatBoost 3.14 higher, ranking reversed), unmonitored cities (no satellite data), and future forecast (recursive instead of frozen lags). \textbf{No paper numbers to compare}: temporal date split and per-city \texttt{TimeSeriesSplit}. Possible reasons for minor numerical fold differences include retroactive WAQI revisions, differing fold city pairings, and undocumented lag day shifts in the base paper. An additional reason for the RMSE differences is that the paper's printed cross-validation output (its Figures 6 and 8) shows 168 feature columns and 7,250 rows in total, whereas our pipeline uses 10 feature columns and 16,585 rows, showing that the feature sets and preprocessing differ and the paper does not describe them fully. All experimental results are explicitly labelled as reproduced, approximately reproduced, or not reproduced, and nothing was tuned to move our numbers toward the paper's reported values.
