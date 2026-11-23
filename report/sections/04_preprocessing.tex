@@ -1,0 +1,20 @@
+\section{Preprocessing}
+Our preprocessing pipeline transformed raw WAQI records into clean, structured tables suitable for machine learning algorithms.
+
+\subsection{Data Cleaning and Missing Value Imputation}
+We filtered raw files for South African records with fine particulate measurements (\texttt{Country == 'ZA'} and \texttt{Specie == 'pm25'}). We removed edge dates (2018-12-31 and 2023-01-01) caused by UTC timezone offsets, keeping strictly the four full calendar years from January 1, 2019 to December 31, 2022.
+
+Ground stations occasionally experience sensor outages or telemetry failures, creating date gaps. We handled missing values by reindexing each city only between its own first recorded date and its last recorded date, filling internal gaps with that specific city's observed mean $\text{PM}_{2.5}$ value. We did not extend any city beyond its last real observation date (East London ended July 10, 2022, Richards Bay August 22, 2022, Cape Town October 21, 2022), avoiding synthetic records after station shutdown. The raw data contains 2 readings of 999 in Middelburg (on May 15 and 16, 2019), which look like placeholder or error values. The paper does not mention removing any values, so we kept them; they affect the Hazardous class, some RMSE values and the lag features and may contribute to the unstable East London and Middelburg forecasts. This produced a cleaned dataset containing 16,585 daily records across the twelve cities.
+
+\subsection{Scaling, Encoding, and Feature Extraction}
+Tree-based models (CatBoost, XGBoost, Decision Trees) make partition splits based on feature rank ordering rather than geometric distance metrics. Therefore, we did not apply feature scaling, normalization, or standardization. In addition, coordinates, calendar features, and numerical lags are continuous or integer numeric variables, so no categorical encoding was necessary.
+
+From each record's date, we extracted seven calendar features: day of week ($0$--$6$), calendar quarter ($1$--$4$), month ($1$--$12$), year ($2019$--$2022$), day of year ($1$--$365$), day of month ($1$--$31$), and ISO week of year ($1$--$52$). To account for inter-annual patterns, Figure 12 of the base paper included three lagged features (\texttt{lag1}, \texttt{lag2}, \texttt{lag3}), but omitted their day shifts. Because air quality follows annual seasonality, we defined 52-week annual shifts: 364 days for \texttt{lag1}, 728 days for \texttt{lag2}, and 1,092 days for \texttt{lag3}. A shift of 364 days aligns the day of the week across successive years ($52 \times 7 = 364$). Early records lacking prior history were left as missing values (\texttt{NaN}), which CatBoost and XGBoost handle natively during tree construction.
+
+\subsection{Train, Validation, and Test Splits}
+We implemented three evaluation splits:
+\begin{enumerate}
+    \item \textbf{Spatial 5-Fold Cross-Validation}: Records were grouped by city into five folds. In each fold, entire cities were held out as the test set. The held-out fold also served as the validation set for early stopping (patience of 100 iterations for CatBoost, 50 rounds for XGBoost).
+    \item \textbf{Temporal Date Split}: Observations recorded before January 1, 2022 served as the training partition (12,604 rows), and observations from January 1, 2022 onward served as the test partition (3,981 rows). The regression experiments use this historical date split as specified in the base paper, rather than a random 80/20 split.
+    \item \textbf{AQI Classification Split}: The base paper does not state the split ratio for the AQI classifiers; we used a 70/30 split with \texttt{random\_state=42} (11,609 train, 4,976 test rows) because the paper's reported test support of 4,402 samples is approximately 30\% of its data.
+\end{enumerate}
