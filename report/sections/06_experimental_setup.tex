@@ -1,0 +1,20 @@
+\section{Experimental Setup}
+All reported numerical results, tables, and figures were generated automatically by our Python codebase without manual editing. Code and results: https://github.com/MSK456/south-africa-pm25-prediction-phase1.
+
+\subsection{Hardware and Software Environment}
+All experiments were run on an Intel Core i5-8250U CPU @ 1.60GHz (4 cores, 8 threads), 16 GB RAM, Windows 11 Pro. The code ran on CPU only, without GPU acceleration.
+
+The software environment was built around Python 3.11.9 inside an isolated virtual environment (\texttt{.venv}). Package versions were pinned in \texttt{requirements.txt}: pandas 3.1.1, numpy 2.4.6, scikit-learn 1.9.1, catboost 1.2.10, xgboost 3.2.0, matplotlib 3.11.2, and seaborn 0.13.2. A global random seed of 42 was set across Python's \texttt{random}, NumPy, scikit-learn, CatBoost (\texttt{random\_seed=42}), and XGBoost (\texttt{random\_state=42}).
+
+\subsection{Evaluation Metrics}
+Regression model accuracy was evaluated using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE):
+\begin{equation}
+\text{RMSE} = \sqrt{\frac{1}{N}\sum_{i=1}^{N}(y_i - \hat{y}_i)^2}, \quad \text{MAE} = \frac{1}{N}\sum_{i=1}^{N}|y_i - \hat{y}_i|
+\end{equation}
+where $y_i$ is the ground-truth daily AQI median and $\hat{y}_i$ is the model prediction.
+
+For multi-class AQI classification, we computed overall Accuracy, macro-averaged Sensitivity, macro-averaged Specificity, and a supplementary ordinal-label RMSE:
+\begin{equation}
+\text{Acc} = \frac{\sum_{c}\text{TP}_c}{N} \times 100\%, \quad \text{Sens} = \frac{1}{|C|}\sum_{c=0}^{5}\frac{\text{TP}_c}{\text{TP}_c + \text{FN}_c}, \quad \text{Spec} = \frac{1}{|C|}\sum_{c=0}^{5}\frac{\text{TN}_c}{\text{TN}_c + \text{FP}_c}
+\end{equation}
+where $\text{TP}_c$, $\text{TN}_c$, $\text{FP}_c$, and $\text{FN}_c$ denote one-versus-rest counts for category $c$. Following the base paper, we include classification RMSE as a supplementary ordinal metric measuring numerical differences between discrete class integers ($0$ to $5$), though it is an ordinal-distance proxy rather than a standard classification metric.
