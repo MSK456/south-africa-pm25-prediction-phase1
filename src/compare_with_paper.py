@@ -122,18 +122,32 @@ def compare_results():
     clf_tex.columns = ["Model", "Paper Acc (%)", "Our Acc (%)", "Diff (%)"]
     save_latex_tabular(clf_tex, TABLES_DIR / "comparison_classification.tex")
     
-    # Combined AQI table for simplified report: Paper Acc, Our Acc, Sensitivity, Specificity, RMSE
+    # Combined AQI table for simplified report: Paper Acc, Our Acc, Sensitivity, Specificity, Macro Prec, Macro F1, RMSE
     merged_aqi = []
+    pr_path = TABLES_DIR / "aqi_precision_recall.csv"
+    pr_df = pd.read_csv(pr_path) if pr_path.exists() else None
+    
     for _, r in clf_df.iterrows():
         m_name = r["Model"]
         sub = paper_df[(paper_df["category"] == "aqi_accuracy") & (paper_df["model"] == m_name)]
         p_acc = f"{float(sub['paper_value'].iloc[0]):.3f}%" if not sub.empty else "-"
+        
+        m_prec = "-"
+        m_f1 = "-"
+        if pr_df is not None:
+            pr_sub = pr_df[pr_df["Model"] == m_name]
+            if not pr_sub.empty:
+                m_prec = f"{float(pr_sub['Macro Precision'].iloc[0]):.4f}"
+                m_f1 = f"{float(pr_sub['Macro F1'].iloc[0]):.4f}"
+                
         merged_aqi.append({
             "Model": m_name,
             "Paper Acc": p_acc,
             "Our Acc": r["Accuracy"],
             "Sensitivity": r["Sensitivity"],
             "Specificity": r["Specificity"],
+            "Macro Prec": m_prec,
+            "Macro F1": m_f1,
             "RMSE": r["RMSE"]
         })
     merged_aqi_df = pd.DataFrame(merged_aqi)

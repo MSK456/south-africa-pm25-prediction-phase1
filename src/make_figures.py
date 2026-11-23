@@ -22,54 +22,54 @@ def set_style():
     plt.rcParams["axes.labelsize"] = 10
 
 def plot_figure1_workflow():
-    fig, ax = plt.subplots(figsize=(7.2, 2.6), dpi=300)
+    fig, ax = plt.subplots(figsize=(7.5, 3.2), dpi=300)
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 100)
     ax.axis("off")
 
-    def draw_box(x, y, w, h, text, color="#e8f0fe", ec="#1a73e8"):
+    def draw_box(x, y, w, h, text, color="#e8f0fe", ec="#1a73e8", fontsize=9.2):
         rect = patches.FancyBboxPatch(
             (x - w / 2, y - h / 2), w, h,
             boxstyle="round,pad=0.8,rounding_size=2",
-            facecolor=color, edgecolor=ec, linewidth=1.2
+            facecolor=color, edgecolor=ec, linewidth=1.3
         )
         ax.add_patch(rect)
-        ax.text(x, y, text, ha="center", va="center", fontsize=8.2, fontweight="medium", linespacing=1.2)
+        ax.text(x, y, text, ha="center", va="center", fontsize=fontsize, fontweight="medium", linespacing=1.25)
 
     def draw_arrow(x1, y1, x2, y2):
         ax.annotate(
             "", xy=(x2, y2), xytext=(x1, y1),
-            arrowprops=dict(arrowstyle="-|>", color="#3c4043", lw=1.2, mutation_scale=10)
+            arrowprops=dict(arrowstyle="-|>", color="#3c4043", lw=1.3, mutation_scale=12)
         )
 
     # Column 1: Ingestion & Filter
-    draw_box(12, 75, 18, 28, "Raw WAQI CSVs\n(2019-2022 Data)")
-    draw_box(12, 25, 18, 28, "Filter ZA & pm25\n(South Africa)")
-    draw_arrow(12, 61, 12, 39)
+    draw_box(12, 75, 19, 30, "Raw WAQI CSVs\n(2019-2022 Data)")
+    draw_box(12, 25, 19, 30, "Filter ZA & pm25\n(South Africa)")
+    draw_arrow(12, 60, 12, 40)
 
     # Column 2: Cleaning & Features
-    draw_box(36, 25, 18, 28, "Per-City Reindex\n& Mean Imputation")
-    draw_box(36, 75, 18, 28, "Feature Engineering\n(7 Date Feats, 3 Lags)")
-    draw_arrow(21, 25, 27, 25)
-    draw_arrow(36, 39, 36, 61)
+    draw_box(37, 25, 20, 30, "Per-City Reindex\n& Mean Imputation")
+    draw_box(37, 75, 20, 30, "Feature Engineering\n(7 Date Feats, 3 Lags)")
+    draw_arrow(21.5, 25, 27, 25)
+    draw_arrow(37, 40, 37, 60)
 
     # Column 3: Three model branches
-    draw_box(63, 83, 22, 22, "Regression (CB & XGB)\nGroupKFold, TS, DateSplit", color="#e6f4ea", ec="#137333")
-    draw_box(63, 50, 22, 22, "AQI Classification\n5 Classifiers & Demo", color="#e6f4ea", ec="#137333")
-    draw_box(63, 17, 22, 22, "Forecast & Spatial\nRecursive, 6 Cities", color="#e6f4ea", ec="#137333")
+    draw_box(64, 83, 24, 24, "Regression (CB & XGB)\nGroupKFold, TS, DateSplit", color="#e6f4ea", ec="#137333", fontsize=8.8)
+    draw_box(64, 50, 24, 24, "AQI Classification\n5 Classifiers & Demo", color="#e6f4ea", ec="#137333", fontsize=8.8)
+    draw_box(64, 17, 24, 24, "Forecast & Spatial\nRecursive, 6 Cities", color="#e6f4ea", ec="#137333", fontsize=8.8)
 
     # Arrows from Feature Engineering to 3 branches
-    draw_arrow(45, 78, 52, 83)
-    draw_arrow(45, 75, 52, 50)
-    draw_arrow(45, 72, 52, 17)
+    draw_arrow(47, 78, 52, 83)
+    draw_arrow(47, 75, 52, 50)
+    draw_arrow(47, 72, 52, 17)
 
     # Column 4: Comparison & Results
-    draw_box(88, 50, 18, 38, "Results &\nPaper Comparison\n(Tables & Figures)", color="#fef7e0", ec="#b06000")
+    draw_box(89, 50, 18, 42, "Results &\nPaper Comparison\n(Tables & Figures)", color="#fef7e0", ec="#b06000", fontsize=9.2)
 
     # Arrows from 3 branches to Results
-    draw_arrow(74, 83, 80, 58)
-    draw_arrow(74, 50, 79, 50)
-    draw_arrow(74, 17, 80, 42)
+    draw_arrow(76, 83, 80, 58)
+    draw_arrow(76, 50, 80, 50)
+    draw_arrow(76, 17, 80, 42)
 
     plt.tight_layout()
     out = FIGURES_DIR / "figure1_workflow.png"
@@ -77,7 +77,7 @@ def plot_figure1_workflow():
     plt.close()
 
 def plot_figure2_city_and_month_pm25(df):
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.2))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.5, 2.8), dpi=300)
     city_order = [
         "Middelburg", "Pretoria", "East London", "Johannesburg",
         "Cape Town", "Vereeniging", "Klerksdorp", "Richards Bay",
@@ -94,13 +94,15 @@ def plot_figure2_city_and_month_pm25(df):
         legend=False,
         palette="tab10",
         capsize=0.1,
-        err_kws={"linewidth": 1.2, "color": "black"},
+        err_kws={"linewidth": 1.0, "color": "black"},
         ax=ax1
     )
-    ax1.set_title("(a) Mean PM2.5 AQI by Monitoring City", fontsize=11, fontweight="bold")
-    ax1.set_xlabel("City", fontsize=10)
-    ax1.set_ylabel("PM2.5 Median (AQI)", fontsize=10)
-    ax1.set_xticklabels(ax1.get_xticklabels(), rotation=45, ha="right", fontsize=9)
+    ax1.set_title("(a) Mean PM2.5 AQI by City", fontsize=8.5, fontweight="bold")
+    ax1.set_xlabel("City", fontsize=8)
+    ax1.set_ylabel("PM2.5 Median (AQI)", fontsize=8)
+    ax1.tick_params(axis="y", labelsize=7.5)
+    ax1.set_xticks(range(len(cities)))
+    ax1.set_xticklabels(cities, rotation=45, ha="right", fontsize=7.5)
     
     df_m = df.copy()
     df_m["Date"] = pd.to_datetime(df_m["Date"])
@@ -112,17 +114,18 @@ def plot_figure2_city_and_month_pm25(df):
         y="Median_PM25",
         color="#1f77b4",
         errorbar=("ci", 95),
-        linewidth=2.0,
+        linewidth=1.8,
         ax=ax2
     )
-    ax2.set_title("(b) Monthly Profile (Winter Peak)", fontsize=11, fontweight="bold")
-    ax2.set_xlabel("Month of Year", fontsize=10)
-    ax2.set_ylabel("PM2.5 Median (AQI)", fontsize=10)
+    ax2.set_title("(b) Monthly Profile (Winter Peak)", fontsize=8.5, fontweight="bold")
+    ax2.set_xlabel("Month of Year", fontsize=8)
+    ax2.set_ylabel("PM2.5 Median (AQI)", fontsize=8)
+    ax2.tick_params(axis="both", labelsize=7.5)
     ax2.set_xticks(range(1, 13))
     
     plt.tight_layout()
     out = FIGURES_DIR / "figure2_city_and_month_pm25.png"
-    plt.savefig(out, dpi=200)
+    plt.savefig(out, dpi=300, bbox_inches="tight")
     plt.close()
 
 def plot_figure3_city_bar(df):
@@ -316,32 +319,34 @@ def plot_figure7_catboost_johannesburg():
     
     jhb = df_oof[df_oof["City"] == "Johannesburg"].sort_values("Date").copy()
     
-    fig, axes = plt.subplots(2, 1, figsize=(10, 8))
+    fig, axes = plt.subplots(2, 1, figsize=(6.3, 4.0), dpi=300)
     
     # Smoothed time series (7-day rolling)
     jhb["Actual_smooth"] = jhb["Median_PM25"].rolling(7, min_periods=1).mean()
     jhb["Pred_smooth"] = jhb["preds_cb"].rolling(7, min_periods=1).mean()
     
-    axes[0].plot(jhb["Date"], jhb["Actual_smooth"], color="#1f77b4", linewidth=1.4, label="Actual (7-day smooth)")
-    axes[0].plot(jhb["Date"], jhb["Pred_smooth"], color="#ff7f0e", linewidth=1.4, label="Predicted CatBoost (7-day smooth)")
-    axes[0].set_title("Time Series Plot for Johannesburg (Actual vs Predicted)", fontweight="bold", fontsize=11)
-    axes[0].set_ylabel("PM2.5 (AQI)", fontsize=10)
-    axes[0].legend(fontsize=9)
+    axes[0].plot(jhb["Date"], jhb["Actual_smooth"], color="#1f77b4", linewidth=1.2, label="Actual (7-day smooth)")
+    axes[0].plot(jhb["Date"], jhb["Pred_smooth"], color="#ff7f0e", linewidth=1.2, label="Predicted CatBoost (7-day smooth)")
+    axes[0].set_title("Time Series Plot for Johannesburg (Actual vs Predicted)", fontweight="bold", fontsize=8.5)
+    axes[0].set_ylabel("PM2.5 (AQI)", fontsize=8)
+    axes[0].legend(fontsize=7.5)
+    axes[0].tick_params(axis="both", labelsize=7.5)
     axes[0].grid(True, linestyle="--", alpha=0.5)
     
     # Scatter plot actual vs predicted
-    axes[1].scatter(jhb["Median_PM25"], jhb["preds_cb"], alpha=0.3, color="#1f77b4", s=18)
+    axes[1].scatter(jhb["Median_PM25"], jhb["preds_cb"], alpha=0.3, color="#1f77b4", s=14)
     max_val = max(jhb["Median_PM25"].max(), jhb["preds_cb"].max(), 200)
-    axes[1].plot([0, max_val], [0, max_val], color="red", linestyle="--", linewidth=1.5, label="y = x (Perfect Prediction)")
-    axes[1].set_title("CatBoost Regressor: Actual vs Predicted PM2.5 (Johannesburg)", fontweight="bold", fontsize=11)
-    axes[1].set_xlabel("Actual Median_PM25", fontsize=10)
-    axes[1].set_ylabel("Predicted preds", fontsize=10)
-    axes[1].legend(fontsize=9)
+    axes[1].plot([0, max_val], [0, max_val], color="red", linestyle="--", linewidth=1.2, label="y = x (Perfect Prediction)")
+    axes[1].set_title("CatBoost Regressor: Actual vs Predicted PM2.5 (Johannesburg)", fontweight="bold", fontsize=8.5)
+    axes[1].set_xlabel("Actual Median_PM25", fontsize=8)
+    axes[1].set_ylabel("Predicted preds", fontsize=8)
+    axes[1].legend(fontsize=7.5)
+    axes[1].tick_params(axis="both", labelsize=7.5)
     axes[1].grid(True, linestyle="--", alpha=0.5)
     
     plt.tight_layout()
     out = FIGURES_DIR / "figure7_catboost_johannesburg.png"
-    plt.savefig(out, dpi=200)
+    plt.savefig(out, dpi=300, bbox_inches="tight")
     plt.close()
 
 def plot_figure9_xgboost_klerksdorp():
