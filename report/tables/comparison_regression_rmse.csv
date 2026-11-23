@@ -1,0 +1,13 @@
+Model,Evaluation Fold,Paper Reported RMSE,Our Replicated RMSE,Difference
+CatBoost,Fold 0,24.179,31.026,+6.847
+CatBoost,Fold 1,38.749,34.815,-3.934
+CatBoost,Fold 2,24.030,32.053,+8.023
+CatBoost,Fold 3,22.448,27.160,+4.712
+CatBoost,Fold 4,19.189,19.259,+0.070
+CatBoost,Mean,25.719,28.863,+3.144
+XGBoost,Fold 0,21.332,33.448,+12.116
+XGBoost,Fold 1,39.868,36.453,-3.415
+XGBoost,Fold 2,26.252,30.442,+4.190
+XGBoost,Fold 3,25.520,27.897,+2.377
+XGBoost,Fold 4,25.229,14.641,-10.588
+XGBoost,Mean,27.639,28.576,+0.937

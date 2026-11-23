@@ -1,0 +1,14 @@
+City,Eval Days,Sanity RMSE,Sanity MAE
+Bloemfontein,36,19.989,14.900
+Cape Town,0,-,-
+Durban,36,16.086,13.772
+East London,0,-,-
+Johannesburg,36,13.196,9.750
+Klerksdorp,13,17.151,14.313
+Middelburg,36,16.650,14.070
+Port Elizabeth,36,12.828,10.998
+Pretoria,36,21.787,17.039
+Richards Bay,0,-,-
+Vereeniging,36,15.442,12.488
+Worcester,36,8.810,7.426
+Average (Available),301,15.771,12.751

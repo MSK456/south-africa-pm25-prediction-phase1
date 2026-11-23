@@ -1,0 +1,62 @@
+category,item,value,min_val,max_val,details
+overall_mean_pm25,all_cities,51.354096,1.000000,999.000000,Total cleaned rows: 16585
+rows_per_city,Johannesburg,1461,,,Mean PM2.5: 75.60
+rows_per_city,Middelburg,1461,,,Mean PM2.5: 55.69
+rows_per_city,Port Elizabeth,1461,,,Mean PM2.5: 34.74
+rows_per_city,Vereeniging,1461,,,Mean PM2.5: 71.38
+rows_per_city,Klerksdorp,1438,,,Mean PM2.5: 43.22
+rows_per_city,Pretoria,1390,,,Mean PM2.5: 75.43
+rows_per_city,Worcester,1390,,,Mean PM2.5: 28.60
+rows_per_city,Bloemfontein,1347,,,Mean PM2.5: 76.88
+rows_per_city,Cape Town,1346,,,Mean PM2.5: 33.56
+rows_per_city,Durban,1299,,,Mean PM2.5: 57.37
+rows_per_city,East London,1271,,,Mean PM2.5: 34.56
+rows_per_city,Richards Bay,1260,,,Mean PM2.5: 24.55
+reading_999,Middelburg,999.0,999.0,999.0,Date: 2019-05-15
+reading_999,Middelburg,999.0,999.0,999.0,Date: 2019-05-16
+aqi_train_class_count,Class 0,6923,,,Train partition (N=11609)
+aqi_train_class_count,Class 1,3778,,,Train partition (N=11609)
+aqi_train_class_count,Class 2,603,,,Train partition (N=11609)
+aqi_train_class_count,Class 3,272,,,Train partition (N=11609)
+aqi_train_class_count,Class 4,33,,,Train partition (N=11609)
+aqi_train_class_count,Class 5,0,,,Train partition (N=11609)
+aqi_test_class_count,Class 0,2956,,,Test partition (N=4976)
+aqi_test_class_count,Class 1,1605,,,Test partition (N=4976)
+aqi_test_class_count,Class 2,286,,,Test partition (N=4976)
+aqi_test_class_count,Class 3,109,,,Test partition (N=4976)
+aqi_test_class_count,Class 4,18,,,Test partition (N=4976)
+aqi_test_class_count,Class 5,2,,,Test partition (N=4976)
+aqi_macro_metric,Random Forest,0.8246,0.8167,0.8333,"Macro Prec=0.8167, Recall=0.8333, F1=0.8246"
+classifier_misclassification_total,Random Forest,2,,,Total misclassified out of 4976
+classifier_misclassification_pair,Random Forest,2,999.0000,999.0000,True Class 5 -> Predicted Class 4 (count=2)
+aqi_macro_metric,Logistic Regression,0.8214,0.8122,0.8316,"Macro Prec=0.8122, Recall=0.8316, F1=0.8214"
+classifier_misclassification_total,Logistic Regression,5,,,Total misclassified out of 4976
+classifier_misclassification_pair,Logistic Regression,3,150.0000,150.0000,True Class 2 -> Predicted Class 3 (count=3)
+classifier_misclassification_pair,Logistic Regression,2,999.0000,999.0000,True Class 5 -> Predicted Class 4 (count=2)
+aqi_macro_metric,SVM,0.8124,0.8026,0.8237,"Macro Prec=0.8026, Recall=0.8237, F1=0.8124"
+classifier_misclassification_total,SVM,58,,,Total misclassified out of 4976
+classifier_misclassification_pair,SVM,48,51.0000,51.0000,True Class 1 -> Predicted Class 0 (count=48)
+classifier_misclassification_pair,SVM,8,149.0000,150.0000,True Class 2 -> Predicted Class 3 (count=8)
+classifier_misclassification_pair,SVM,2,999.0000,999.0000,True Class 5 -> Predicted Class 4 (count=2)
+aqi_macro_metric,KNN,0.8191,0.8143,0.8241,"Macro Prec=0.8143, Recall=0.8241, F1=0.8191"
+classifier_misclassification_total,KNN,3,,,Total misclassified out of 4976
+classifier_misclassification_pair,KNN,1,203.0000,203.0000,True Class 4 -> Predicted Class 3 (count=1)
+classifier_misclassification_pair,KNN,2,999.0000,999.0000,True Class 5 -> Predicted Class 4 (count=2)
+aqi_macro_metric,Decision Tree,0.8246,0.8167,0.8333,"Macro Prec=0.8167, Recall=0.8333, F1=0.8246"
+classifier_misclassification_total,Decision Tree,2,,,Total misclassified out of 4976
+classifier_misclassification_pair,Decision Tree,2,999.0000,999.0000,True Class 5 -> Predicted Class 4 (count=2)
+forecast_max_pm25,Bloemfontein,176.7083,176.71,176.7083,2022-11-26 to 2023-12-31 recursive forecast (rounded: 176.71)
+forecast_max_pm25,Cape Town,67.7414,67.74,67.7414,2022-11-26 to 2023-12-31 recursive forecast (rounded: 67.74)
+forecast_max_pm25,Durban,109.0495,109.05,109.0495,2022-11-26 to 2023-12-31 recursive forecast (rounded: 109.05)
+forecast_max_pm25,East London,244.0686,244.07,244.0686,2022-11-26 to 2023-12-31 recursive forecast (rounded: 244.07)
+forecast_max_pm25,Johannesburg,121.7299,121.73,121.7299,2022-11-26 to 2023-12-31 recursive forecast (rounded: 121.73)
+forecast_max_pm25,Klerksdorp,49.9925,49.99,49.9925,2022-11-26 to 2023-12-31 recursive forecast (rounded: 49.99)
+forecast_max_pm25,Middelburg,414.9034,414.90,414.9034,2022-11-26 to 2023-12-31 recursive forecast (rounded: 414.90)
+forecast_max_pm25,Port Elizabeth,70.3435,70.34,70.3435,2022-11-26 to 2023-12-31 recursive forecast (rounded: 70.34)
+forecast_max_pm25,Pretoria,140.1493,140.15,140.1493,2022-11-26 to 2023-12-31 recursive forecast (rounded: 140.15)
+forecast_max_pm25,Richards Bay,35.4172,35.42,35.4172,2022-11-26 to 2023-12-31 recursive forecast (rounded: 35.42)
+forecast_max_pm25,Vereeniging,106.9566,106.96,106.9566,2022-11-26 to 2023-12-31 recursive forecast (rounded: 106.96)
+forecast_max_pm25,Worcester,64.8224,64.82,64.8224,2022-11-26 to 2023-12-31 recursive forecast (rounded: 64.82)
+datesplit_partition_counts,train_pre_2022,12604,,,Train rows (< 2022-01-01)
+datesplit_partition_counts,test_post_2022,3981,,,Test rows (>= 2022-01-01)
+forecast_parameters,horizon_days,401,2022-11-26,2023-12-31,401 forecast days from 2022-11-26 to 2023-12-31
