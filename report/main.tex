@@ -1,0 +1,95 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[top=0.75in,bottom=0.75in,left=0.8in,right=0.8in]{geometry}
+\usepackage{mathptmx}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{cite}
+\let\oldbibliography\thebibliography
+\renewcommand{\thebibliography}[1]{%
+  \oldbibliography{#1}%
+  \footnotesize
+  \setlength{\itemsep}{0pt}%
+  \setlength{\parsep}{0pt}%
+  \setlength{\parskip}{0pt}%
+}
+\usepackage{microtype}
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{5pt plus 1pt minus 1pt}{2pt plus 1pt minus 1pt}
+\titlespacing*{\subsection}{0pt}{3pt plus 1pt minus 1pt}{1.5pt plus 1pt minus 1pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+\usepackage[font=small,labelfont=bf,skip=3pt]{caption}
+
+\setlength{\textfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\floatsep}{5pt plus 2pt minus 2pt}
+\setlength{\intextsep}{5pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{2pt}
+\setlength{\belowcaptionskip}{2pt}
+
+\renewcommand{\topfraction}{0.90}
+\renewcommand{\bottomfraction}{0.90}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.80}
+
+\graphicspath{{figures/}}
+
+\begin{document}
+
+% Page 1: Cover Page
+\begin{titlepage}
+    \centering
+    \vspace*{2.5cm}
+    
+    {\LARGE \bfseries PM2.5 Prediction in South African Cities Using Machine Learning\par}
+    \vspace{0.4cm}
+    {\large \bfseries Phase 1: Base Paper Implementation Report\par}
+    
+    \vspace{1.8cm}
+    
+    {\textbf{Base Paper:}\par}
+    \vspace{0.2cm}
+    {``Air pollution particulate matter (PM2.5) prediction in South African cities using machine learning techniques''\par}
+    {Tshepang Duncan Morapedi and Ibidun Christiana Obagbuwa\par}
+    {\textit{Frontiers in Artificial Intelligence}, 6:1230087, 2023. DOI: 10.3389/frai.2023.1230087\par}
+    
+    \vspace{2.0cm}
+    
+    {\textbf{Group 46}\par}
+    \vspace{0.3cm}
+    {Shaheed Khan (24I-0037)\par}
+    {Abuzar Ali (24I-0041)\par}
+    
+    \vspace{1.5cm}
+    
+    {\textbf{Course:} Machine Learning\par}
+    {\textbf{Instructor:} Sir Ahmad Raza\par}
+    {\textbf{Section:} AI-5B\par}
+    {FAST National University of Computer and Emerging Sciences, Islamabad\par}
+    
+    \vspace{1.5cm}
+    
+    {\textbf{Submission Date:} 19 November 2026\par}
+    
+    \vfill
+\end{titlepage}
+
+\newpage
+\setcounter{page}{1}
+
+\input{sections/01_introduction}
+\input{sections/02_paper_summary}
+\input{sections/03_dataset}
+\input{sections/04_preprocessing}
+\input{sections/05_methodology}
+\input{sections/06_experimental_setup}
+\input{sections/07_results}
+\input{sections/08_comparison}
+\input{sections/09_discussion_conclusion}
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
+
+\end{document}
