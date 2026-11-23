@@ -2,6 +2,8 @@
 
 This repository contains our Phase 1 reproduction of the university Machine Learning semester project for Section AI-5B at FAST NUCES Islamabad, taught by Sir Ahmad Raza.
 
+> **Note on Base Paper Identity:** The DOI link in the assignment sheet (`https://doi.org/10.3390/s21041064`) points to an MDPI *Sensors* article by Wardana et al. on edge deep learning, which differs from the paper title assigned. We implemented the paper matching the assigned title: *"Air pollution particulate matter (PM2.5) prediction in South African cities using machine learning techniques"* by Tshepang Duncan Morapedi and Ibidun Christiana Obagbuwa, *Frontiers in Artificial Intelligence*, vol. 6, p. 1230087, 2023 (DOI: `10.3389/frai.2023.1230087`).
+
 **Group 46:**
 - Shaheed Khan (24I-0037)
 - Abuzar Ali (24I-0041)
@@ -24,9 +26,9 @@ The paper predicts daily particulate matter ($\text{PM}_{2.5}$) levels across 12
 ```text
 south-africa-pm25-prediction-phase1/
 ├── data/
-│   ├── raw/                  # Raw CSV files from aqicn.org (gitignored)
-│   ├── processed/            # Cleaned data and predictions (gitignored)
-│   └── paper_reported.csv    # Benchmark numbers reported in the base paper
+│   ├── raw/                  # Raw CSV files from aqicn.org (excluded from repo/ZIP, gitignored)
+│   ├── processed/            # Cleaned data and predictions (included in submission ZIP, gitignored)
+│   └── paper_reported.csv    # Benchmark numbers reported in the base paper (tracked in Git)
 ├── reference/                # Base paper PDF (gitignored)
 ├── src/
 │   ├── config.py             # Global constants, coordinates, seed, parameters
@@ -38,13 +40,15 @@ south-africa-pm25-prediction-phase1/
 │   ├── no_station.py         # Prediction for 6 unmonitored cities + LOCO CV
 │   ├── forecast.py           # Recursive daily forecast (2022-2023) + sanity check
 │   ├── aqi_classifiers.py    # 5 AQI status classifiers + interactive demo
+│   ├── extra_stats.py        # Generates extra_stats.csv and aqi_precision_recall.csv
 │   ├── make_figures.py       # Generates all figures and syncs report assets
 │   └── compare_with_paper.py # Builds side-by-side comparison tables
 ├── results/
-│   ├── figures/              # Generated high-resolution PNG plots (200 dpi)
-│   ├── tables/               # Generated CSV and LaTeX (.tex) tables
+│   ├── figures/              # Generated high-resolution PNG plots (300 dpi)
+│   ├── tables/               # Generated CSV and LaTeX tables (including extra_stats.csv and aqi_precision_recall.csv)
 │   └── deviations.md         # Documented assumptions and paper deviations
 ├── report/                   # Single-column LaTeX project (Overleaf-ready)
+│   ├── main.pdf              # Compiled 10-page academic report
 │   ├── main.tex              # Main LaTeX file with cover page
 │   ├── sections/             # Modular section files (01 to 09)
 │   ├── figures/              # Synced figure assets
@@ -58,19 +62,29 @@ south-africa-pm25-prediction-phase1/
 
 ---
 
-## 3. Dataset Download Instructions
-Due to the terms of service of the World Air Quality Index (WAQI) platform, the raw data files cannot be redistributed in this public repository.
+## 3. Dataset Download Instructions and Access Terms
 
-To download the raw data:
+### Why Raw Data Files Are Excluded
+In compliance with project submission instructions and data licensing agreements, the four raw annual CSV archives are **not included** in this GitHub repository or in the final submission ZIP:
+1. **File Size Limits:** The four raw global CSV archives total approximately 490 MB (467.40 MiB). Each individual file exceeds GitHub's standard 100 MiB file-size limit for regular Git repositories.
+2. **Platform Terms of Use:** The World Air Quality Index (WAQI) project terms of use ([https://aqicn.org/data-platform/tos/](https://aqicn.org/data-platform/tos/)) govern access for non-commercial research and educational use upon user registration, and restrict direct bulk re-hosting or redistribution of the raw global archives. Processed, cleaned subsets relevant to this project are retained in `data/processed/` for direct inspection and verification.
+
+### Official Data Source & Access Instructions
+Evaluators, researchers, and users can obtain the dataset directly from the official provider:
+- **Official WAQI Portal:** [https://aqicn.org/data-platform/covid19/](https://aqicn.org/data-platform/covid19/)
+- **Terms of Service:** [https://aqicn.org/data-platform/tos/](https://aqicn.org/data-platform/tos/) (governed under non-commercial research and educational use).
+
+To obtain the data for replication:
 1. Visit the WAQI COVID-19 open data platform: [https://aqicn.org/data-platform/covid19/](https://aqicn.org/data-platform/covid19/)
-2. Accept the terms of service and download the annual CSV archives for the years:
-   - `waqi-covid19-airqualitydata-2019.csv`
-   - `waqi-covid19-airqualitydata-2020.csv`
-   - `waqi-covid19-airqualitydata-2021.csv`
-   - `waqi-covid19-airqualitydata-2022.csv`
-3. Place these 4 CSV files directly inside the `data/raw/` directory.
+2. Request access through the platform's email registration form and agree to the WAQI Data Use Agreement.
+3. Download the individual yearly CSV archives for the four study years (2019, 2020, 2021, and 2022).
+4. Save the downloaded CSV files directly inside the `data/raw/` directory with these exact filenames:
+   - `data/raw/waqi-covid19-airqualitydata-2019.csv`
+   - `data/raw/waqi-covid19-airqualitydata-2020.csv`
+   - `data/raw/waqi-covid19-airqualitydata-2021.csv`
+   - `data/raw/waqi-covid19-airqualitydata-2022.csv`
 
-> **Note on Units:** The values in this dataset are US EPA Air Quality Index (AQI) values, not raw physical concentrations in $\mu\text{g/m}^3$.
+> **Note on Data Units:** All PM$_{2.5}$ measurements in the WAQI dataset are reported as US EPA Air Quality Index (AQI) values, not raw physical concentrations in $\mu\text{g/m}^3$.
 
 ---
 
@@ -95,22 +109,23 @@ pip install -r requirements.txt
 
 ## 5. How to Run the Complete Pipeline
 
-Once the raw data files are in `data/raw/`, run everything from end to end with one command:
+Once the raw data files are in `data/raw/`, run everything from end to end using the virtual environment Python interpreter (`.\.venv\Scripts\python.exe`):
 ```powershell
-python run_all.py
+.\.venv\Scripts\python.exe run_all.py
 ```
 
 > **Note on Environment & Dependency Versions:** Always run the code inside the `.venv` with the pinned package versions in `requirements.txt` (Python 3.11.9, scikit-learn 1.9.1). Logistic Regression's accuracy changes slightly with other scikit-learn versions (99.879 percent with version 1.8.0 versus 99.900 percent with version 1.9.1).
 
-The script will automatically execute all steps in sequence:
+The script will automatically execute all 9 steps in sequence:
 1. `preprocess.py`: Cleans raw records, drops UTC edge dates, and reindexes each city between its own first and last dates with mean imputation.
 2. `cv_regression.py`: Runs 5-fold spatial `GroupKFold` (held-out cities) and per-city `TimeSeriesSplit`.
 3. `datesplit_eval.py`: Trains on dates before 2022-01-01 and evaluates on 2022-01-01 onward.
 4. `no_station.py`: Computes leave-one-city-out (LOCO) CV and predicts 2022 levels for 6 unmonitored towns.
-5. `forecast.py`: Trains on data up to 2022-11-25 and forecasts recursively through 2023-12-31, comparing with real late-2022 data as a sanity check.
+5. `forecast.py`: Trains on data up to 2022-11-25 and forecasts recursively through 2023-12-31, saving predictions to `data/processed/` and comparing with real late-2022 data as a sanity check.
 6. `aqi_classifiers.py`: Evaluates 5 classifiers on 6 AQI health categories and tests the 125.55 demo sample.
-7. `make_figures.py`: Generates all PNG plots at 200 dpi and copies figures and tables into `report/`.
-8. `compare_with_paper.py`: Compares our results with `data/paper_reported.csv` and outputs side-by-side tables.
+7. `extra_stats.py`: Computes overall mean PM2.5, rows per city, 999 readings, class distributions, per-classifier misclassifications and macro precision/recall/F1, and forecast maxima, writing `results/tables/extra_stats.csv` and `results/tables/aqi_precision_recall.csv`.
+8. `make_figures.py`: Generates all PNG plots at high resolution (300 dpi) and copies figures and tables into `report/`.
+9. `compare_with_paper.py`: Compares our results with `data/paper_reported.csv` and outputs side-by-side tables.
 
 Running `run_all.py` twice with seed 42 will produce identical numerical results.
 
@@ -135,6 +150,8 @@ Measured on an **Intel Core i5-8250U CPU @ 1.60GHz (4 cores, 8 threads), 16 GB R
 | `src/make_figures.py` | High-resolution figure generation and asset synchronization | 32.03 s |
 | `src/compare_with_paper.py` | Side-by-side comparison tables against published paper baselines | 0.16 s |
 | **Total** | **Full end-to-end execution (`python run_all.py`)** | **394.90 s** |
+
+> **Note on Execution Timing:** The sum of the individual script runtimes is approximately 383.63 seconds. The ~11.27 second difference from the total measured pipeline execution time (394.90 seconds via `Measure-Command`) is attributable to pipeline execution overhead: Python interpreter startup time across subprocess invocations, multi-stage module imports (specifically heavy machine learning libraries like CatBoost, XGBoost, and Scikit-Learn that initialize C/C++ backends upon import), and intermediate disk I/O between consecutive pipeline stages.
 
 ---
 
