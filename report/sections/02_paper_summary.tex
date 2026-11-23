@@ -1,0 +1,12 @@
+\section{Base Paper Summary}
+The publication by Morapedi and Obagbuwa (2023) \cite{morapedi2023air} investigated data-driven methods for predicting daily particulate matter ($\text{PM}_{2.5}$) across South Africa. The authors analyzed historical open ground sensor data from 2019 to 2022 across twelve urban locations that had active monitoring stations: Bloemfontein, Cape Town, Durban, East London, Johannesburg, Klerksdorp, Middelburg, Port Elizabeth, Pretoria, Richards Bay, Vereeniging, and Worcester.
+
+The experimental methodology in the paper comprised four main components:
+\begin{enumerate}
+    \item \textbf{Continuous PM2.5 Regression}: The authors evaluated CatBoost Regressor \cite{prokhorenkova2018catboost} and XGBoost Regressor \cite{chen2016xgboost} using seven calendar features and three lagged variables (\texttt{lag1}, \texttt{lag2}, \texttt{lag3}). Under 5-fold spatial cross-validation with held-out cities, CatBoost achieved a reported average Root Mean Squared Error (RMSE) of 25.72, while XGBoost achieved 27.64.
+    \item \textbf{Temporal Date-Split Evaluation}: To test generalizability over time, regressors were trained on historical observations recorded before January 1, 2022, and evaluated on observations recorded from January 1, 2022 onward.
+    \item \textbf{Spatial Estimation for Unmonitored Municipalities}: For six towns without ground monitors (Kimberley, Kuruman, Lebowakgomo, Mahikeng, Upington, and Vryburg), the top regression model generated daily 2022 predictions, incorporating Sentinel-5P satellite observations.
+    \item \textbf{Categorical Health Risk Classification}: Continuous median $\text{PM}_{2.5}$ values were mapped into six US EPA AQI health bands: Good ($0$--$50$), Moderate ($51$--$100$), Unhealthy for Sensitive Groups ($101$--$150$), Unhealthy ($151$--$200$), Very Unhealthy ($201$--$300$), and Hazardous ($301+$). Five scikit-learn classifiers \cite{pedregosa2011scikit} (Random Forest, Logistic Regression, SVM, KNN, Decision Tree) achieved reported accuracies above 98.8\%. An interactive demo with input 125.55 returned Class 2 (Unhealthy for Sensitive Groups) across all five models.
+\end{enumerate}
+
+Section 4.5 of the paper shows a future forecast from 26 November 2022 to 31 December 2023, and Section 6 of the paper compares its results with earlier studies \cite{joharestani2019pm25, akiladevi2020prediction}.
