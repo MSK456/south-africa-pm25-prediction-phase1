@@ -1,0 +1,34 @@
+\section{Dataset Description}
+The data for this study was collected from the World Air Quality Index (WAQI) open COVID-19 dataset \cite{waqi2020covid}. The archive contains daily air quality measurements from ground-based monitoring stations worldwide. We downloaded the annual CSV files for the four calendar years from 2019 to 2022. We used 2019 to 2022 because the paper's figures (its Figures 1, 2, 3 and 13) cover this period and its train/test split on 1 January 2022 and forecast window starting 26 November 2022 are defined on it; its text mentions 2015 to February 2022 for the worldwide dataset, but its South African plots start in 2019. In accordance with the WAQI data-use statement, we acknowledge both the World Air Quality Index Project for coordinating the open platform and the respective originating Environmental Protection Agencies (EPAs) whose monitoring stations provide the underlying observational data.
+
+Each raw file includes terms of service metadata followed by nine columns: \texttt{Date}, \texttt{Country}, \texttt{City}, \texttt{Specie}, \texttt{count}, \texttt{min}, \texttt{max}, \texttt{median}, and \texttt{variance}. Across all countries and species, the dataset has over 9 million rows. Filtering for South African observations (\texttt{Country == 'ZA'}) gives 185,594 records across all measured air species. Restricting the records to fine particulate matter (\texttt{Specie == 'pm25'}) leaves 15,130 raw rows.
+
+The WAQI dataset reports pollutant-specific values converted to the US EPA AQI standard rather than raw physical concentrations. These observations are not fully validated and may be subject to revisions; therefore, the results should be interpreted as an analysis of WAQI-reported PM2.5 AQI values rather than official ground-truth measurements. Higher index values indicate poorer air quality and greater health risks. Although the base paper frequently refers to these measurements as concentrations, all figures, tables, and target variables reflect unitless US EPA AQI values. The prediction target is \texttt{Median\_PM25} AQI for continuous regression, and the discrete AQI class ($0$ to $5$) for classification.
+
+Table \ref{tab:city_coverage} lists the twelve monitored cities analyzed in the base paper, along with their raw row counts, first and last dates in the archive, and geographic coordinates.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{0.92}
+\caption{Station Cities Monitoring Coverage in Raw Data (2019--2022). Rows on 2018-12-31 and 2023-01-01 are removed in preprocessing (Section 4.1).}
+\label{tab:city_coverage}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{City} & \textbf{Raw Rows} & \textbf{First Date} & \textbf{Last Date} & \textbf{Coordinates (Lat, Long)} \\ \midrule
+Johannesburg & 1,551 & 2018-12-31 & 2023-01-01 & (-26.20, 28.04) \\
+Vereeniging & 1,551 & 2018-12-31 & 2023-01-01 & (-26.67, 27.93) \\
+Middelburg & 1,499 & 2018-12-31 & 2023-01-01 & (-25.78, 29.46) \\
+Port Elizabeth & 1,498 & 2018-12-31 & 2023-01-01 & (-33.96, 25.60) \\
+Pretoria & 1,466 & 2019-03-13 & 2023-01-01 & (-25.75, 28.23) \\
+Bloemfontein & 1,334 & 2019-04-25 & 2023-01-01 & (-29.09, 26.16) \\
+Durban & 1,326 & 2019-06-12 & 2023-01-01 & (-29.86, 31.02) \\
+Cape Town & 1,279 & 2019-02-14 & 2022-10-21 & (-33.92, 18.42) \\
+Worcester & 1,081 & 2019-03-13 & 2023-01-01 & (-33.65, 19.45) \\
+Richards Bay & 963 & 2019-03-12 & 2022-08-22 & (-28.78, 32.04) \\
+East London & 953 & 2019-01-17 & 2022-07-10 & (-33.02, 27.91) \\
+Klerksdorp & 629 & 2018-12-31 & 2022-12-08 & (-26.85, 26.67) \\ \bottomrule
+\end{tabular}
+\end{table}
+
+The temporal coverage varies by station, with cities having records that cover different portions of the study period and internal missing dates handled during preprocessing. Several stations stopped reporting during 2022: Cape Town stopped on October 21, 2022, Richards Bay on August 22, 2022, and East London on July 10, 2022. In addition, Klerksdorp is particularly sparse, with only 629 observation days recorded across the four years.
